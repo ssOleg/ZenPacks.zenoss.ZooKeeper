@@ -1,0 +1,46 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+    
+    <configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser = "http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+    <!-- API: Info Adapters -->
+
+    <adapter
+        provides=".ZooKeeper.IZooKeeperInfo"
+        for=".ZooKeeper.ZooKeeper"
+        factory=".ZooKeeper.ZooKeeperInfo"
+        />
+
+    <!-- Impact -->
+    <configure zcml:condition="installed ZenPacks.zenoss.Impact">
+        <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".ZooKeeper.ZooKeeper"
+            factory=".impact.ZooKeeperRelationsProvider"
+            />
+
+    </configure>
+
+    <!-- Browser Resources -->
+    <browser:resourceDirectory
+        name="ZenPacks_zenoss_ZooKeeper"
+        directory="resources"
+        />
+
+    <!-- JavaScript needed for all Zenoss pages. -->
+    <browser:viewlet
+        name="js-zookeeper"
+        paths="/++resource++ZenPacks_zenoss_ZooKeeper/js/zookeeper.js"
+        for="*"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+</configure>
