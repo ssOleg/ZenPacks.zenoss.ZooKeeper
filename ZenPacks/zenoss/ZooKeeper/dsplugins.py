@@ -8,21 +8,34 @@
 #
 ######################################################################
 
+import socket
+
 from logging import getLogger
 log = getLogger('zen.ZooKeeper')
 
-from twisted.internet import defer
+from twisted.internet import defer, reactor
 from twisted.python.failure import Failure
-import socket
 from Products.ZenEvents import ZenEventClasses
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource \
     import PythonDataSourcePlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap
+from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory
 
 
 class ZooKeeperPlugin(PythonDataSourcePlugin):
     '''Monitoring plugin for ZooKeeper'''
     proxy_attributes = ('zZooKeeperPort',)
+
+    def get_result(self, host, port):
+        """
+        Get data from the given host and port. This function
+        returns a Deferred which will be fired with the complete text of
+        the ZooKeeper details or a Failure if the details could not be loaded.
+        """
+        d = defer.Deferred()
+        factory = ZooKeeperClientFactory(d)
+        reactor.connectTCP(host, port, factory)
+        return d
 
     @defer.inlineCallbacks
     def collect(self, config):
@@ -31,23 +44,12 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
         maps = []
         ds = config.datasources[0]
 
-        socketobject = socket.socket()
         try:
-            yield socketobject.connect((ds.manageIp, int(ds.zZooKeeperPort)))
+            result = yield self.get_result(ds.manageIp, int(ds.zZooKeeperPort))
         except Exception as e:
-            socketobject.close()
             raise e
-        result = []
-        if socketobject:
-            socketobject.sendall('stat\n')
-            while True:
-                data = socketobject.recv(4096)
-                if not data:
-                    break
-                result.append(data)
-            socketobject.close()
         if result:
-            values[ds.component] = self.parse_values("".join(result))
+            values[ds.component] = self.parse_values(result)
         else:
             raise Failure(Exception('No monitoring data received'))
         defer.returnValue(dict(
@@ -72,10 +74,8 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
         msg = result
         if isinstance(result, Failure):
             msg = result.value
-            if isinstance(result.value, (ValueError, OverflowError)):
+            if isinstance(result.value, (ValueError, socket.error)):
                 msg = 'Incorrect zZooKeeperPort property entered'
-            if isinstance(result.value, socket.error):
-                msg = result.value.strerror
         log.error(msg)
         return {
             'vaues': {},

@@ -21,8 +21,12 @@ from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenUtils.Utils import unused
 from Products.Zuul.interfaces import ICatalogTool
+from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 
 unused(Globals)
+
+# Categorize zProperties.
+setzPropertyCategory('zZooKeeperPort', 'ZooKeeper')
 
 # Modules containing model classes. Used by zenchkschema to validate
 # bidirectional integrity of defined relationships.

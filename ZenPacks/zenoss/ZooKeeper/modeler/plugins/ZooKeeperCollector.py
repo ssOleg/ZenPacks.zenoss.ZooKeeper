@@ -9,15 +9,16 @@
 
 ''' Models discovery tree for ZooKeeper. '''
 
+import socket
 
 import zope.component
-from twisted.internet import defer
+from twisted.internet import defer, reactor
 from Products.ZenUtils.Utils import prepId
 from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.ZenCollector.interfaces import IEventService
 from ZenPacks.zenoss.ZooKeeper import MODULE_NAME
-import socket
+from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory
 
 
 class ZooKeeperCollector(PythonPlugin):
@@ -30,34 +31,32 @@ class ZooKeeperCollector(PythonPlugin):
         'zZooKeeperPort',
     )
 
+    def get_result(self, host, port):
+        """
+        Get data from the given host and port. This function
+        returns a Deferred which will be fired with the complete text of
+        the ZooKeeper details or a Failure if the details could not be loaded.
+        """
+        d = defer.Deferred()
+        factory = ZooKeeperClientFactory(d)
+        reactor.connectTCP(host, port, factory)
+        return d
+
     @defer.inlineCallbacks
     def collect(self, device, log):
         log.info("Collecting ZooKeeper data for device %s", device.id)
-        socketobject = socket.socket()
+
+        res = ''
         try:
-            yield socketobject.connect(
-                (device.manageIp, int(device.zZooKeeperPort))
+            res = yield self.get_result(
+                device.manageIp, int(device.zZooKeeperPort)
             )
-        except Exception as e:
-            socketobject.close()
-            socketobject = None
-            if isinstance(e, socket.error):
-                e = 'ZooKeeper : ' + e.strerror
-            if isinstance(e, (ValueError, OverflowError)):
+        except Exception, e:
+            if isinstance(e, (ValueError, socket.error)):
                 e = 'Check zZooKeeperPort property, port must be 0-65535'
             log.warn(e)
 
-        result = []
-        if socketobject:
-            socketobject.sendall('stat\n')
-            while True:
-                data = socketobject.recv(4096)
-                if not data:
-                    break
-                result.append(data)
-            socketobject.close()
-
-        defer.returnValue("".join(result))
+        defer.returnValue(res)
 
     def process(self, device, results, log):
         log.info(
