@@ -1,4 +1,5 @@
-ZenPacks.zenoss.ZooKeeper
-=========================
+Zenoss Zenpack for monitoring ZooKeeper
+========================================
 
-ZooKeeper monitoring for Zenoss
+
+http://www.zenoss.com/
