@@ -138,7 +138,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_connections
+ZooKeeperMonitor_connections
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -177,6 +177,35 @@ True
 <tomanycont id='graphPoints'>
 <object id='latency_avg' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+average
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+ZooKeeperMonitor_latency_avg
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='latency_max' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
 1
 </property>
 <property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
@@ -192,19 +221,19 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-latency avg
+maximum
 </property>
 <property type="long" id="limit" mode="w" >
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_latency_avg
+ZooKeeperMonitor_latency_max
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
 </property>
 </object>
-<object id='latency_max' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<object id='latency_min' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
 <property type="long" id="sequence" mode="w" >
 2
 </property>
@@ -221,42 +250,13 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-latency max
+minimum
 </property>
 <property type="long" id="limit" mode="w" >
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_latency_max
-</property>
-<property type="string" id="cFunc" mode="w" >
-AVERAGE
-</property>
-</object>
-<object id='latency_min' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
-<property type="long" id="sequence" mode="w" >
-0
-</property>
-<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
-LINE
-</property>
-<property type="long" id="lineWidth" mode="w" >
-1
-</property>
-<property type="boolean" id="stacked" mode="w" >
-False
-</property>
-<property type="string" id="format" mode="w" >
-%5.2lf%s
-</property>
-<property type="string" id="legend" mode="w" >
-latency min
-</property>
-<property type="long" id="limit" mode="w" >
--1
-</property>
-<property type="string" id="dpName" mode="w" >
-ZooKeeper_latency_min
+ZooKeeperMonitor_latency_min
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -316,7 +316,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_received
+ZooKeeperMonitor_received
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -345,7 +345,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_sent
+ZooKeeperMonitor_sent
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
@@ -405,7 +405,7 @@ ${graphPoint/id}
 -1
 </property>
 <property type="string" id="dpName" mode="w" >
-ZooKeeper_outstanding
+ZooKeeperMonitor_outstanding
 </property>
 <property type="string" id="cFunc" mode="w" >
 AVERAGE
