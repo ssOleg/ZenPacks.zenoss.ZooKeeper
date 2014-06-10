@@ -136,4 +136,3 @@ class BaseTriggers(object):
 
 class ZooKeeperRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['zookeeper_host']
-    impact_relationships = ['zookeeper_host']
