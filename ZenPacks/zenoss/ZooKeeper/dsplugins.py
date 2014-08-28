@@ -81,7 +81,7 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
             'vaues': {},
             'events': [{
                 'component': component,
-                'summary': 'error monitoring: {}'.format(msg),
+                'summary': str(msg),
                 'eventClass': '/Status',
                 'eventKey': 'zookeeper_result',
                 'severity': ZenEventClasses.Error,

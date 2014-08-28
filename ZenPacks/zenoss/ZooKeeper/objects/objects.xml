@@ -132,7 +132,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-${graphPoint/id}
+Connections
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -146,7 +146,7 @@ AVERAGE
 </object>
 </tomanycont>
 </object>
-<object id='Latencies' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<object id='Latency' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
 <property type="int" id="height" mode="w" >
 100
 </property>
@@ -192,7 +192,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-average
+Average
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -221,7 +221,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-maximum
+Maximum
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -250,7 +250,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-minimum
+Minimum
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -310,7 +310,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-${graphPoint/id}
+Received
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -339,7 +339,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-${graphPoint/id}
+Sent
 </property>
 <property type="long" id="limit" mode="w" >
 -1
@@ -399,7 +399,7 @@ False
 %5.2lf%s
 </property>
 <property type="string" id="legend" mode="w" >
-${graphPoint/id}
+Outstanding
 </property>
 <property type="long" id="limit" mode="w" >
 -1
