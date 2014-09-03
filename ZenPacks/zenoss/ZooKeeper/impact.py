@@ -136,3 +136,25 @@ class BaseTriggers(object):
 
 class ZooKeeperRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['zookeeper_host']
+
+    def getEdges(self):
+        for impact in super(ZooKeeperRelationsProvider, self).getEdges():
+            yield impact
+
+        component = self._object
+        device = component.device()
+        relations = [
+            'hadoop_job_history',
+            'hadoop_task_tracker',
+            'hadoop_secondary_name_node',
+            'hadoop_resource_manager',
+            'hadoop_node_managers',
+            'hadoop_job_tracker',
+            'hadoop_data_nodes',
+            'hbase_servers',
+        ]
+
+        for relation in relations:
+            if hasattr(device, relation):
+                for item in getattr(device, relation)():
+                    yield edge(self.guid(), guid(item))
