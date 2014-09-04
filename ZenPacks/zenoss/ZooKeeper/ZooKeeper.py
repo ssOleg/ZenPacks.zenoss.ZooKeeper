@@ -54,7 +54,7 @@ class IZooKeeperInfo(IComponentInfo):
     '''
     mode = schema.TextLine(title=_t(u'Mode'))
     node_count = schema.TextLine(title=_t(u'Node Count'))
-    zookeeper_version = schema.TextLine(title=_t(u'Zookeeper Version'))
+    zookeeper_version = schema.TextLine(title=_t(u'ZooKeeper Version'))
     zxid = schema.TextLine(title=_t(u'Zxid'))
 
 
