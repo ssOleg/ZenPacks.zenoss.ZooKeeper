@@ -9,8 +9,6 @@
 
 ''' Models discovery tree for ZooKeeper. '''
 
-import socket
-
 import zope.component
 from twisted.internet import defer, reactor
 from Products.ZenUtils.Utils import prepId
@@ -18,7 +16,7 @@ from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.ZenCollector.interfaces import IEventService
 from ZenPacks.zenoss.ZooKeeper import MODULE_NAME
-from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory
+from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory, check_error
 
 
 class ZooKeeperCollector(PythonPlugin):
@@ -51,10 +49,8 @@ class ZooKeeperCollector(PythonPlugin):
             res = yield self.get_result(
                 device.manageIp, int(device.zZooKeeperPort)
             )
-        except Exception, e:
-            if isinstance(e, (ValueError, socket.error)):
-                e = 'Check zZooKeeperPort property, port must be 0-65535'
-            log.warn(e)
+        except Exception as e:
+            log.warn(check_error(e))
 
         defer.returnValue(res)
 

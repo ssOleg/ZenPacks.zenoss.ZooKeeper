@@ -8,7 +8,6 @@
 #
 ######################################################################
 
-import socket
 
 from logging import getLogger
 log = getLogger('zen.ZooKeeper')
@@ -19,7 +18,7 @@ from Products.ZenEvents import ZenEventClasses
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource \
     import PythonDataSourcePlugin
 from Products.DataCollector.plugins.DataMaps import ObjectMap
-from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory
+from ZenPacks.zenoss.ZooKeeper.utils import ZooKeeperClientFactory, check_error
 
 
 class ZooKeeperPlugin(PythonDataSourcePlugin):
@@ -39,24 +38,16 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
 
     @defer.inlineCallbacks
     def collect(self, config):
-        values = {}
-        events = []
-        maps = []
+        data = self.new_data()
         ds = config.datasources[0]
 
-        try:
-            result = yield self.get_result(ds.manageIp, int(ds.zZooKeeperPort))
-        except Exception as e:
-            raise e
+        result = yield self.get_result(ds.manageIp, int(ds.zZooKeeperPort))
         if result:
-            values[ds.component] = self.parse_values(result)
+            data['values'][ds.component] = self.parse_values(result)
         else:
             raise Failure(Exception('No monitoring data received'))
-        defer.returnValue(dict(
-            events=events,
-            values=values,
-            maps=maps,
-        ))
+
+        defer.returnValue(data)
 
     def onSuccess(self, result, config):
         component = config.datasources[0].component
@@ -71,23 +62,21 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
 
     def onError(self, result, config):
         component = config.datasources[0].component
-        msg = result
+        data = self.new_data()
+
+        msg = check_error(result)
         if isinstance(result, Failure):
-            msg = result.value
-            if isinstance(result.value, (ValueError, socket.error)):
-                msg = 'Incorrect zZooKeeperPort property entered'
+            msg = check_error(result.value)
+
         log.error(msg)
-        return {
-            'vaues': {},
-            'events': [{
-                'component': component,
-                'summary': str(msg),
-                'eventClass': '/Status',
-                'eventKey': 'zookeeper_result',
-                'severity': ZenEventClasses.Error,
-            }],
-            'maps': [],
-        }
+        data['events'].append({
+            'component': component,
+            'summary': msg,
+            'eventClass': '/Status',
+            'eventKey': 'zookeeper_result',
+            'severity': ZenEventClasses.Error,
+        })
+        return data
 
     def parse_values(self, data):
         """Look for values in result"""
