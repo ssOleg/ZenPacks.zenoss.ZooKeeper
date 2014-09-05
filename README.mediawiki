@@ -119,4 +119,8 @@ Installing this ZenPack will add the following items to your Zenoss system.
 |zenpython
 |}
 
+== Changes ==
+;1.0.0
+* Initial release
+
 {{ZenPackFooter}}
