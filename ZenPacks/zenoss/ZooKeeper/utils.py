@@ -8,6 +8,9 @@
 #
 ######################################################################
 
+from socket import error as SocketError
+
+from twisted.internet.error import ConnectionRefusedError
 from twisted.internet.protocol import Protocol, ClientFactory
 
 
@@ -44,3 +47,15 @@ class ZooKeeperClientFactory(ClientFactory):
         if self.deferred is not None:
             d, self.deferred = self.deferred, None
             d.errback(reason)
+
+
+def check_error(error):
+    '''
+    Check if error is due to Connection or Socket Error or the value
+    supplied for port is not of int type (ValueError)
+    and return correct message for log or event.
+    '''
+    if isinstance(error, (ValueError, SocketError, ConnectionRefusedError)):
+        return ('The modeling failed due to connection issue. '
+                'Verify the value of zZooKeeperPort and re-try')
+    return str(error)
