@@ -1,0 +1,15 @@
+Zookeeper version: 3.4.5-1392090, built on 09/30/2012 17:52 GMT
+Clients:
+ /127.0.0.1:53612[1](queued=0,recved=71380,sent=71462)
+ /127.0.0.1:53622[1](queued=0,recved=52958,sent=52959)
+ /127.0.0.1:54428[1](queued=0,recved=38437,sent=38437)
+ /127.0.0.1:54429[1](queued=0,recved=38507,sent=38507)
+
+Latency min/avg/max: 0/0/925
+Received: 349729
+Sent: 349808
+Connections: 5
+Outstanding: 0
+Zxid: 0xc88d
+Mode: standalone
+Node count: 28
