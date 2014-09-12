@@ -49,13 +49,16 @@ class ZooKeeperClientFactory(ClientFactory):
             d.errback(reason)
 
 
-def check_error(error):
+def check_error(error, key=None):
     '''
     Check if error is due to Connection or Socket Error or the value
     supplied for port is not of int type (ValueError)
     and return correct message for log or event.
     '''
+    prefix = 'The ZooKeeper modeling'
+    if key:
+        prefix = 'The ZooKeeper monitoring'
     if isinstance(error, (ValueError, SocketError, ConnectionRefusedError)):
-        return ('The modeling failed due to connection issue. '
-                'Verify the value of zZooKeeperPort and re-try')
+        return ('{} failed due to connection issue. '
+                'Verify the value of zZooKeeperPort and re-try'.format(prefix))
     return str(error)
