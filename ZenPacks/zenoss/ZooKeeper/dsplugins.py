@@ -66,7 +66,7 @@ class ZooKeeperPlugin(PythonDataSourcePlugin):
 
         msg = check_error(result)
         if isinstance(result, Failure):
-            msg = check_error(result.value)
+            msg = check_error(result.value, True)
 
         log.error(msg)
         data['events'].append({
